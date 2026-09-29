@@ -1,18 +1,26 @@
 @import "tailwindcss";
 
 @theme {
-  --color-paper: #eef2f7;
-  --color-ink: #16233b;
-  --color-muted: #55657f;
-  --color-line: #d0d9e6;
-  --color-cobalt: #2748e8;
-  --color-signal: #d99a00;
-  --font-display: "Bricolage Grotesque", system-ui, sans-serif;
-  --font-body: "Instrument Sans", system-ui, sans-serif;
+  --color-void: #070a18;
+  --color-panel: #0e1329;
+  --color-line: #232b52;
+  --color-text: #e6eaff;
+  --color-muted: #8d97c4;
+  --color-ice: #6be4ff;
+  --color-pink: #ff5caa;
+  --color-amber: #ffc857;
+  --font-display: "Sora", system-ui, sans-serif;
+  --font-mono: "JetBrains Mono", ui-monospace, monospace;
 }
 
 html { scroll-behavior: smooth; }
-body { margin: 0; background: var(--color-paper); color: var(--color-ink); font-family: var(--font-body); line-height: 1.6; }
-a:focus-visible, button:focus-visible { outline: 2px solid var(--color-cobalt); outline-offset: 3px; border-radius: 4px; }
-::selection { background: var(--color-cobalt); color: #fff; }
-@media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } }
+body {
+  margin: 0; color: var(--color-text); font-family: var(--font-display); line-height: 1.65;
+  background:
+    linear-gradient(rgba(107,228,255,.035) 1px, transparent 1px) 0 0 / 48px 48px,
+    linear-gradient(90deg, rgba(107,228,255,.035) 1px, transparent 1px) 0 0 / 48px 48px,
+    var(--color-void);
+}
+a:focus-visible, button:focus-visible { outline: 2px solid var(--color-ice); outline-offset: 3px; border-radius: 4px; }
+::selection { background: var(--color-ice); color: var(--color-void); }
+@media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } .animate-pulse { animation: none; } }
