@@ -2,17 +2,33 @@
   {
     "id": "rag-chat",
     "title": "Chat with your PDF",
-    "description": "RAG with citations using Chroma and Llama 3 on Groq.",
-    "tags": ["RAG", "LangChain", "Chroma"],
+    "description": "Upload a document and ask questions. Answers cite the pages they came from.",
+    "tags": ["RAG", "Chroma", "Groq"],
     "route": "/apps/rag-chat",
-    "status": "live"
+    "status": "coming-soon"
+  },
+  {
+    "id": "text-to-sql",
+    "title": "Ask your database",
+    "description": "Type a business question in plain English and see the SQL and the answer.",
+    "tags": ["Text-to-SQL", "LangGraph", "SQLite"],
+    "route": "/apps/text-to-sql",
+    "status": "coming-soon"
   },
   {
     "id": "agent",
-    "title": "Tool-using AI Agent",
-    "description": "LangGraph agent with search and calculator tools.",
+    "title": "Research agent",
+    "description": "An agent that plans, searches the web, runs calculations and explains its steps.",
     "tags": ["Agents", "LangGraph"],
     "route": "/apps/agent",
+    "status": "coming-soon"
+  },
+  {
+    "id": "resume-matcher",
+    "title": "Resume and job matcher",
+    "description": "Scores how well a resume fits a job description using embeddings.",
+    "tags": ["Embeddings", "NLP"],
+    "route": "/apps/resume-matcher",
     "status": "coming-soon"
   }
 ]
