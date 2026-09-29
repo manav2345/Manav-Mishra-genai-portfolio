@@ -9,11 +9,11 @@ from app import apps
 
 app = FastAPI(title="AI Workbench API")
 
-frontend_origin = os.getenv("FRONTEND_URL", "https://<your-app>.vercel.app")
+origins = os.getenv("ALLOWED_ORIGINS", "http://localhost:5173").split(",")
 
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["http://localhost:5173", frontend_origin],
+    allow_origins=origins,
     allow_methods=["*"],
     allow_headers=["*"],
 )
