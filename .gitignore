@@ -1,0 +1,21 @@
+# Python
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+
+# Node.js
+node_modules/
+dist/
+build/
+
+# Environment files
+.env
+.env.*
+!.env.example
+
+# Editor and OS files
+.vscode/*
+!.vscode/extensions.json
+.DS_Store
+Thumbs.db
