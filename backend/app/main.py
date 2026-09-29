@@ -1,4 +1,5 @@
 import importlib
+import os
 import pkgutil
 
 from fastapi import FastAPI
@@ -8,9 +9,11 @@ from app import apps
 
 app = FastAPI(title="AI Workbench API")
 
+frontend_origin = os.getenv("FRONTEND_URL", "https://<your-app>.vercel.app")
+
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["http://localhost:5173", "https://<your-app>.vercel.app"],
+    allow_origins=["http://localhost:5173", frontend_origin],
     allow_methods=["*"],
     allow_headers=["*"],
 )
