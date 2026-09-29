@@ -1,0 +1,18 @@
+[
+  {
+    "id": "rag-chat",
+    "title": "Chat with your PDF",
+    "description": "RAG with citations using Chroma and Llama 3 on Groq.",
+    "tags": ["RAG", "LangChain", "Chroma"],
+    "route": "/apps/rag-chat",
+    "status": "live"
+  },
+  {
+    "id": "agent",
+    "title": "Tool-using AI Agent",
+    "description": "LangGraph agent with search and calculator tools.",
+    "tags": ["Agents", "LangGraph"],
+    "route": "/apps/agent",
+    "status": "coming-soon"
+  }
+]
