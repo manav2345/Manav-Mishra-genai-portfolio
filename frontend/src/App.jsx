@@ -1,14 +1,29 @@
-import { lazy, Suspense } from 'react'
+import { lazy, Suspense, useEffect, useState } from 'react'
 import { BrowserRouter, Link, Route, Routes } from 'react-router-dom'
 import projects from './projects.json'
 
 function Home() {
+  const [backendMessage, setBackendMessage] = useState('Connecting to backend...')
+
+  useEffect(() => {
+    fetch(`${import.meta.env.VITE_API_URL}/api/hello/`)
+      .then((response) => {
+        if (!response.ok) {
+          throw new Error('Backend request failed')
+        }
+        return response.json()
+      })
+      .then((data) => setBackendMessage(data.message))
+      .catch(() => setBackendMessage('Backend unavailable'))
+  }, [])
+
   return (
     <main className="min-h-screen bg-slate-950 p-8 text-slate-100">
       <h1 className="text-4xl font-bold">Your Name · AI Workbench</h1>
       <p className="mt-2 text-slate-400">
         Live GenAI and ML projects. Click any card to try it.
       </p>
+      <p className="mt-4 text-sm text-emerald-400">{backendMessage}</p>
       <div className="mt-10 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
         {projects.map((project) => (
           <Link
