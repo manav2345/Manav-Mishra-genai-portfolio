@@ -1,24 +1,27 @@
 [
   {
-    "id": "rag-chat",
-    "title": "Chat with your PDF",
-    "description": "Upload a document and ask questions. Answers cite the pages they came from.",
-    "tags": ["RAG", "Chroma", "Groq"],
-    "route": "/apps/rag-chat",
-    "status": "coming-soon"
-  },
-  {
     "id": "text-to-sql",
     "title": "Ask your database",
-    "description": "Type a business question in plain English and see the SQL and the answer.",
+    "tagline": "Plain-English questions, SQL and answers.",
+    "how": "Question → schema-aware agent → SQL → result → explanation",
     "tags": ["Text-to-SQL", "LangGraph", "SQLite"],
     "route": "/apps/text-to-sql",
     "status": "coming-soon"
   },
   {
+    "id": "rag-chat",
+    "title": "Chat with your PDF",
+    "tagline": "Upload a document, get answers with page citations.",
+    "how": "Upload → chunk → embed → retrieve → cited answer",
+    "tags": ["RAG", "Chroma", "Groq"],
+    "route": "/apps/rag-chat",
+    "status": "coming-soon"
+  },
+  {
     "id": "agent",
     "title": "Research agent",
-    "description": "An agent that plans, searches the web, runs calculations and explains its steps.",
+    "tagline": "Plans, searches, calculates and shows its steps.",
+    "how": "Goal → plan → tools → observe → answer",
     "tags": ["Agents", "LangGraph"],
     "route": "/apps/agent",
     "status": "coming-soon"
@@ -26,7 +29,8 @@
   {
     "id": "resume-matcher",
     "title": "Resume and job matcher",
-    "description": "Scores how well a resume fits a job description using embeddings.",
+    "tagline": "Scores resume fit against a job description.",
+    "how": "Resume + JD → embeddings → score → gaps",
     "tags": ["Embeddings", "NLP"],
     "route": "/apps/resume-matcher",
     "status": "coming-soon"
