@@ -127,8 +127,7 @@ export default function TextToSql() {
       else if (ev.node === 'explain') { setAns(ev.answer); setStep(5) }
       else if (ev.node === 'error') throw new Error(ev.message)
     }
-    try { await streamAsk(question, handle) } catch (e) { setErr(e.message) }
-    setStep(5)
+    try { await streamAsk(question, handle); setStep(5) } catch (e) { setErr(e.message); setStep(0) } // on failure, hide stages instead of showing false checkmarks
   }
 
   return (
