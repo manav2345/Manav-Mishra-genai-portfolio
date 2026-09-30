@@ -61,7 +61,7 @@ graph TD;
 	classDef last fill:#bfb6fc
 ```
 
-[View the generated PNG diagram](frontend/public/text-to-sql-flow.png)
+[View the generated PNG diagram](docs/text-to-sql-flow.png)
 
 ## Run Locally
 
@@ -163,7 +163,7 @@ pip freeze > requirements.txt
 2. Add `frontend/src/apps/<name>/index.jsx` for the app page.
 3. Add a lazy route for the page in `frontend/src/App.jsx`.
 4. Add the app metadata to `frontend/src/projects.json`.
-5. After changing the graph, run `python scripts/export_graph.py` from `backend/` and commit the updated diagram files.
+5. After changing the graph, run `python scripts/export_graph.py` from `backend/` and commit the updated files in `docs/`.
 6. Push the changes and verify both deployments.
 
 ## Roadmap
