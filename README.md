@@ -32,6 +32,37 @@ A hub for live generative AI and machine learning projects. The landing page rea
 └── README.md
 ```
 
+## Architecture
+
+The Text-to-SQL demo is orchestrated by a compiled LangGraph workflow:
+
+```mermaid
+---
+config:
+  flowchart:
+    curve: linear
+---
+graph TD;
+	__start__([<p>__start__</p>]):::first
+	retrieve_schema(retrieve_schema)
+	generate_sql(generate_sql)
+	run_sql(run_sql)
+	explain(explain)
+	__end__([<p>__end__</p>]):::last
+	__start__ --> retrieve_schema;
+	generate_sql --> run_sql;
+	retrieve_schema --> generate_sql;
+	run_sql -.-> __end__;
+	run_sql -.-> explain;
+	run_sql -.-> generate_sql;
+	explain --> __end__;
+	classDef default fill:#f2f0ff,line-height:1.2
+	classDef first fill-opacity:0
+	classDef last fill:#bfb6fc
+```
+
+[View the generated PNG diagram](frontend/public/text-to-sql-flow.png)
+
 ## Run Locally
 
 ### Backend
@@ -132,7 +163,8 @@ pip freeze > requirements.txt
 2. Add `frontend/src/apps/<name>/index.jsx` for the app page.
 3. Add a lazy route for the page in `frontend/src/App.jsx`.
 4. Add the app metadata to `frontend/src/projects.json`.
-5. Push the changes and verify both deployments.
+5. After changing the graph, run `python scripts/export_graph.py` from `backend/` and commit the updated diagram files.
+6. Push the changes and verify both deployments.
 
 ## Roadmap
 

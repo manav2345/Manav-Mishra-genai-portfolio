@@ -140,6 +140,18 @@ export default function TextToSql() {
       </div>
       <h1 className="mt-8 text-3xl font-bold">Ask your database</h1>
       <p className="mt-2 text-muted">Type a question. Watch it find the right tables, write SQL, run it and explain the answer. Demo data: an online store with 6 tables.</p>
+      <details className="mt-5 rounded-xl border border-line bg-panel/80 p-4">
+        <summary className="cursor-pointer font-semibold text-ice">How it works</summary>
+        <div className="mt-4 space-y-3">
+          <img
+            src="/text-to-sql-flow.png"
+            alt="LangGraph workflow: retrieve schema, generate SQL, run SQL with retry loop, explain"
+            className="w-full max-w-md rounded-lg border border-line bg-white p-3"
+            loading="lazy"
+          />
+          <p className="text-sm text-muted">Generated from the LangGraph definition itself, so it never drifts from the code.</p>
+        </div>
+      </details>
 
       <div className="mt-6 flex gap-2">
         <input value={q} onChange={e => setQ(e.target.value)} onKeyDown={e => e.key === 'Enter' && run(q)} maxLength={300} placeholder="e.g. Which category earns the most revenue?"
