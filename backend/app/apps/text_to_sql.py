@@ -18,7 +18,7 @@ from langgraph.graph import StateGraph, START, END
 router = APIRouter()
 log = logging.getLogger("uvicorn.error")
 MODEL = "nvidia/nemotron-3-super-120b-a12b"
-EMBED_MODEL = "nvidia/nemotron-3-embed-1b"
+EMBED_MODEL = os.getenv("EMBED_MODEL", "nvidia/nemotron-3-embed-1b")
 
 # ---------- LLM client (key comes from the NVIDIA_API_KEY env var, never from code) ----------
 _client = None
@@ -101,11 +101,11 @@ def score(question, items):
     """items: [(key, text)] -> ({key: similarity}, method)"""
     try:
         q = embed([question], "query")[0]
-        missing = [(k, t) for k, t in items if k not in _cache]
+        missing = [(k, t) for k, t in items if f"{EMBED_MODEL}|{k}" not in _cache]
         if missing:
             for (k, _), v in zip(missing, embed([t for _, t in missing], "passage")):
-                _cache[k] = v
-        return {k: cos(q, _cache[k]) for k, _ in items}, "embeddings"
+                _cache[f"{EMBED_MODEL}|{k}"] = v
+        return {k: cos(q, _cache[f"{EMBED_MODEL}|{k}"]) for k, _ in items}, "embeddings"
     except Exception:
         log.warning("Embeddings failed, using keyword fallback", exc_info=True)
         qc = Counter(toks(question))

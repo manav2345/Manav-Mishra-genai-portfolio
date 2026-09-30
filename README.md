@@ -136,8 +136,9 @@ The root `render.yaml` contains the service configuration for a Render Blueprint
 | Vercel | `VITE_API_URL` | `https://manav-mishra-genai-portfolio.onrender.com` |
 | Render | `ALLOWED_ORIGINS` | `http://localhost:5173,https://manav-mishra-genai-portfolio.vercel.app` |
 | Render | `NVIDIA_API_KEY` | Your NVIDIA API key, stored only in Render |
+| Render | `EMBED_MODEL` | Optional; defaults to `nvidia/nemotron-3-embed-1b` |
 
-Do not commit `.env` files or API keys. Vercel preview deployments are also accepted by the backend CORS pattern.
+Do not commit `.env` files or API keys. Keep `NVIDIA_API_KEY` unquoted in environment settings. Vercel preview deployments are also accepted by the backend CORS pattern.
 
 ## Updating the Live Site
 
