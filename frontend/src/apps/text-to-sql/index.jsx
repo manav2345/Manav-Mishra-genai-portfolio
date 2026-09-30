@@ -119,7 +119,20 @@ export default function TextToSql() {
   const scrollToEnd = useCallback(() => {
     if (!followRef.current) return
     const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches
-    endRef.current?.scrollIntoView({ behavior: reduce ? 'auto' : 'smooth', block: 'end' })
+    const behavior = reduce ? 'auto' : 'smooth'
+    // Primary: scroll the sentinel into view (works for window scroll)
+    try { endRef.current?.scrollIntoView({ behavior, block: 'end' }) } catch { /* ignore */ }
+    // Fallback: window/documentElement scrollTo covers production where
+    // document.body.scrollHeight !== documentElement.scrollHeight or
+    // scrollIntoView is throttled/blocked. rAF ensures layout is flushed.
+    requestAnimationFrame(() => {
+      if (!followRef.current) return
+      const top = Math.max(document.body.scrollHeight, document.documentElement.scrollHeight)
+      try { window.scrollTo({ top, behavior }) } catch { window.scrollTo(0, top) }
+      try { document.documentElement.scrollTo?.({ top, behavior }) } catch { /* ignore */ }
+    })
+    // Dual-scroll strategy ensures auto-follow works in both local dev and
+    // deployed Vercel where document structure may differ.
   }, [])
 
   useEffect(() => {
@@ -155,7 +168,8 @@ export default function TextToSql() {
       if (['PageUp', 'ArrowUp', 'Home'].includes(event.key)) stopFollowing()
     }
     const handleScroll = () => {
-      const atBottom = window.innerHeight + window.scrollY >= document.body.scrollHeight - 40
+      const scrollHeight = Math.max(document.body.scrollHeight, document.documentElement.scrollHeight)
+    const atBottom = window.innerHeight + window.scrollY >= scrollHeight - 40
       if (atBottom) {
         followRef.current = true
         setShowJump(false)
