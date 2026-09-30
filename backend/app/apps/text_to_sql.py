@@ -252,10 +252,16 @@ class Ask(BaseModel):
 
 @router.post("/ask")
 def ask(body: Ask, request: Request):
-    limit(request, cap=20)  # each question = several LLM calls
-    q = body.question.strip()[:300]
-    if len(q) < 3:
-        raise HTTPException(400, "Please type a question.")
+    try:
+        limit(request, cap=20)  # each question = several LLM calls
+        q = body.question.strip()[:300]
+        if len(q) < 3:
+            raise HTTPException(400, "Please type a question.")
+    except HTTPException:
+        raise
+    except Exception as error:
+        log.exception("text_to_sql request setup failed")
+        raise HTTPException(500, "The language model is unavailable right now. Please try again.") from error
 
     def events():
         try:

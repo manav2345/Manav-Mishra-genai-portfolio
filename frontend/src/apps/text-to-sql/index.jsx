@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { useCallback, useEffect, useRef, useState } from 'react'
 import { Link } from 'react-router-dom'
 import { useBackend } from '../../useBackend'
 
@@ -109,11 +109,74 @@ export default function TextToSql() {
   const [step, setStep] = useState(0) // 0 idle, 1-4 running stage, 5 finished
   const [ret, setRet] = useState(null), [tries, setTries] = useState([]), [res, setRes] = useState(null), [ans, setAns] = useState('')
   const [err, setErr] = useState('')
+  const [showJump, setShowJump] = useState(false)
+  const stagesRef = useRef(null)
+  const endRef = useRef(null)
+  const followRef = useRef(true)
   const sql = tries.length ? tries[tries.length - 1].sql : ''
   const busy = step > 0 && step < 5
 
+  const scrollToEnd = useCallback(() => {
+    if (!followRef.current) return
+    const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches
+    endRef.current?.scrollIntoView({ behavior: reduce ? 'auto' : 'smooth', block: 'end' })
+  }, [])
+
+  useEffect(() => {
+    if (step > 0) scrollToEnd()
+  }, [step, ret, tries.length, res, ans, err, scrollToEnd])
+
+  useEffect(() => {
+    if (!busy || !stagesRef.current) return undefined
+    let frame = null
+    const observer = new ResizeObserver(() => {
+      if (frame !== null) return
+      frame = requestAnimationFrame(() => {
+        frame = null
+        scrollToEnd()
+      })
+    })
+    observer.observe(stagesRef.current)
+    return () => {
+      observer.disconnect()
+      if (frame !== null) cancelAnimationFrame(frame)
+    }
+  }, [busy, scrollToEnd])
+
+  useEffect(() => {
+    const stopFollowing = () => {
+      followRef.current = false
+      if (busy) setShowJump(true)
+    }
+    const handleWheel = event => {
+      if (event.deltaY < 0) stopFollowing()
+    }
+    const handleKeyDown = event => {
+      if (['PageUp', 'ArrowUp', 'Home'].includes(event.key)) stopFollowing()
+    }
+    const handleScroll = () => {
+      const atBottom = window.innerHeight + window.scrollY >= document.body.scrollHeight - 40
+      if (atBottom) {
+        followRef.current = true
+        setShowJump(false)
+      }
+    }
+    window.addEventListener('wheel', handleWheel, { passive: true })
+    window.addEventListener('touchmove', stopFollowing, { passive: true })
+    window.addEventListener('keydown', handleKeyDown)
+    window.addEventListener('scroll', handleScroll, { passive: true })
+    return () => {
+      window.removeEventListener('wheel', handleWheel)
+      window.removeEventListener('touchmove', stopFollowing)
+      window.removeEventListener('keydown', handleKeyDown)
+      window.removeEventListener('scroll', handleScroll)
+    }
+  }, [busy])
+
   async function run(question) {
     if (busy || question.trim().length < 3) return
+    followRef.current = true
+    setShowJump(false)
     setQ(question); setErr(''); setRet(null); setTries([]); setRes(null); setAns(''); setStep(1)
     const handle = async ev => {
       if (ev.node === 'retrieve_schema') { setRet(ev); await sleep(2200); setStep(2) }
@@ -150,7 +213,7 @@ export default function TextToSql() {
         {EXAMPLES.map(e => <button key={e} onClick={() => run(e)} disabled={busy} className="rounded-full border border-line px-3 py-1 text-xs text-muted hover:border-ice hover:text-text disabled:opacity-50">{e}</button>)}
       </div>
 
-      <div className="mt-8 space-y-4">
+      <div ref={stagesRef} className="mt-8 space-y-4">
         {step >= 1 && <Stage n={1} title="Find relevant schema" step={step}>{ret ? <Retrieval data={ret} /> : <p className="animate-pulse text-sm text-muted">Scoring tables and columns…</p>}</Stage>}
         {step >= 2 && (
           <Stage n={2} title="Generate SQL" step={step}>
@@ -164,6 +227,17 @@ export default function TextToSql() {
         {step >= 4 && <Stage n={4} title="Explain the result" step={step}>{ans ? <p className="text-pink"><span className="text-text"><Typed text={ans} speed={10} /></span></p> : !err && <p className="animate-pulse text-sm text-muted">Model is writing the answer…</p>}</Stage>}
         {err && <p role="alert" className="rounded-lg border border-pink p-4 text-sm text-pink">{err}</p>}
       </div>
+      <div ref={endRef} className="h-24" aria-hidden />
+      {showJump && busy && (
+        <button
+          type="button"
+          aria-label="Follow pipeline progress"
+          onClick={() => { followRef.current = true; setShowJump(false); scrollToEnd() }}
+          className="fixed bottom-6 left-1/2 -translate-x-1/2 rounded-full border border-ice bg-panel px-4 py-2 font-mono text-xs text-ice shadow-lg"
+        >
+          Follow progress ↓
+        </button>
+      )}
       <p className="mt-10 font-mono text-xs text-muted">Orchestration: LangGraph + LangChain · Model: Nemotron 3 Super 120B · Retrieval: NVIDIA embeddings · DB: SQLite, read-only</p>
     </div>
   )
