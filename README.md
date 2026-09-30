@@ -98,6 +98,16 @@ Keep Groq, Gemini, and other private API keys in the backend's Render environmen
 
 The root `render.yaml` contains the service configuration for a Render Blueprint deployment.
 
+### Deployment Env Vars
+
+| Service | Variable | Value |
+| --- | --- | --- |
+| Vercel | `VITE_API_URL` | `https://manav-mishra-genai-portfolio.onrender.com` |
+| Render | `ALLOWED_ORIGINS` | `http://localhost:5173,https://manav-mishra-genai-portfolio.vercel.app` |
+| Render | `NVIDIA_API_KEY` | Your NVIDIA API key, stored only in Render |
+
+Do not commit `.env` files or API keys. Vercel preview deployments are also accepted by the backend CORS pattern.
+
 ## Updating the Live Site
 
 The repository currently deploys from `master`:

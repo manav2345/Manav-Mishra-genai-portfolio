@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
 import { useBackend } from '../../useBackend'
 
-const API = import.meta.env.VITE_API_URL
+const API = (import.meta.env.VITE_API_URL || '').replace(/\/$/, '')
 const sleep = ms => new Promise(r => setTimeout(r, ms))
 const EXAMPLES = ['Which category earns the most revenue?', 'Top 5 customers by total spend', 'How many orders were cancelled in each city?', 'Average rating for each product category']
 

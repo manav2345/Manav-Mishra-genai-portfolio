@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react'
 
-const API = import.meta.env.VITE_API_URL
+const API = (import.meta.env.VITE_API_URL || '').replace(/\/$/, '')
 
 // Pings /api/health on load so the free-tier backend wakes before anyone clicks a demo.
 // Returns 'waking' | 'ready' | 'error'. Reuse it inside each app page too.

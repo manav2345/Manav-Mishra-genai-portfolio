@@ -3,21 +3,25 @@ import os
 import pkgutil
 
 from dotenv import load_dotenv
-
-load_dotenv()
-
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
+
+load_dotenv()
 
 from app import apps
 
 app = FastAPI(title="AI Workbench API")
 
-origins = os.getenv("ALLOWED_ORIGINS", "http://localhost:5173").split(",")
+origins = [
+    origin.strip().rstrip("/")
+    for origin in os.getenv("ALLOWED_ORIGINS", "http://localhost:5173").split(",")
+    if origin.strip()
+]
 
 app.add_middleware(
     CORSMiddleware,
     allow_origins=origins,
+    allow_origin_regex=r"https://manav-mishra-genai-portfolio(-[a-z0-9-]+)?\.vercel\.app",
     allow_methods=["*"],
     allow_headers=["*"],
 )
