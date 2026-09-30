@@ -26,7 +26,10 @@ A hub for live generative AI and machine learning projects. The landing page rea
 ├── backend/                  # FastAPI service
 │   ├── app/main.py           # API setup and router auto-discovery
 │   ├── app/apps/              # One router file per backend app
+│   ├── scripts/               # Development diagnostics and graph export
+│   ├── .env.example
 │   └── requirements.txt
+├── docs/                     # Generated architecture diagrams
 ├── render.yaml               # Render service configuration
 ├── .gitignore
 └── README.md
@@ -87,7 +90,7 @@ pip install -r requirements.txt
 uvicorn app.main:app --reload
 ```
 
-The API runs at `http://localhost:8000`. Interactive documentation is available at `http://localhost:8000/docs`.
+The API runs at `http://localhost:8001`. Interactive documentation is available at `http://localhost:8001/docs`.
 
 ### Frontend
 
@@ -99,10 +102,10 @@ npm install
 npm run dev
 ```
 
-Create `frontend/.env` for local API access:
+Create `frontend/.env` from `frontend/.env.example` for local API access:
 
 ```env
-VITE_API_URL=http://localhost:8000
+VITE_API_URL=http://localhost:8001
 ```
 
 The frontend runs at `http://localhost:5173`.
@@ -123,6 +126,8 @@ The frontend runs at `http://localhost:5173`.
 - **Build command:** `pip install -r requirements.txt`
 - **Start command:** `uvicorn app.main:app --host 0.0.0.0 --port $PORT`
 - **Plan:** Free
+- **Health check:** `/api/health`
+- **Python:** pinned through `PYTHON_VERSION` in `render.yaml`
 - **Environment variable:** `ALLOWED_ORIGINS=http://localhost:5173,https://<vercel-app-url>`
 
 Keep Groq, Gemini, and other private API keys in the backend's Render environment only. Never put secrets in frontend `VITE_*` variables because Vite exposes them to the browser.
@@ -166,6 +171,8 @@ pip freeze > requirements.txt
 4. Add the app metadata to `frontend/src/projects.json`.
 5. After changing the graph, run `python scripts/export_graph.py` from `backend/` and commit the updated files in `docs/`.
 6. Push the changes and verify both deployments.
+
+Use `backend/.env.example` and `frontend/.env.example` as local templates. Never commit the resulting `.env` files.
 
 ## Roadmap
 

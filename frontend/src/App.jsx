@@ -4,7 +4,6 @@ import Home from './pages/Home'
 
 // One lazy import + one <Route> per app. Cards come from projects.json.
 const TextToSql = lazy(() => import('./apps/text-to-sql'))
-const RagChat = lazy(() => import('./apps/rag-chat'))
 
 export default function App() {
   return (
@@ -13,7 +12,6 @@ export default function App() {
         <Routes>
           <Route path="/" element={<Home />} />
           <Route path="/apps/text-to-sql" element={<TextToSql />} />
-          <Route path="/apps/rag-chat" element={<RagChat />} />
         </Routes>
       </Suspense>
     </BrowserRouter>

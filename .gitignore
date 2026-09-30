@@ -1,6 +1,6 @@
 # Python
 __pycache__/
-*.py[cod]
+*.pyc
 .venv/
 venv/
 
@@ -15,10 +15,13 @@ build/
 !.env.example
 
 # Editor and OS files
-.vscode/*
+.vscode/
 !.vscode/extensions.json
 .DS_Store
 Thumbs.db
+
+# Logs
+*.log
 
 # Generated local architecture diagrams
 backend/graph/langgraph.png
