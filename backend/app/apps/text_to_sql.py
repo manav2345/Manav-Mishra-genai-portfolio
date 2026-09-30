@@ -176,7 +176,12 @@ EXPLAIN_PROMPT = ChatPromptTemplate.from_messages([
                "Mention the key numbers. If the result is empty, say no matching data was found. Do not invent facts."),
     ("human", "Question: {question}\nSQL: {sql}\nResult ({n} rows):\n{table}"),
 ])
-strip_think = lambda t: re.sub(r"<think>.*?</think>", "", t or "", flags=re.S).strip()
+def clean_model_text(text):
+    text = re.sub(r"<think>.*?</think>", "", text or "", flags=re.S)
+    return re.sub(r"\*\*(.*?)\*\*", r"\1", text).strip()
+
+
+strip_think = clean_model_text
 def sql_chain():     return SQL_PROMPT | llm(0.1) | StrOutputParser()
 def explain_chain(): return EXPLAIN_PROMPT | llm(0.3) | StrOutputParser()
 
