@@ -16,7 +16,7 @@ from langgraph.graph import StateGraph, START, END
 
 router = APIRouter()
 MODEL = "nvidia/nemotron-3-super-120b-a12b"
-EMBED_MODEL = "nvidia/nv-embedqa-e5-v5"
+EMBED_MODEL = "nvidia/nemotron-3-embed-1b"
 
 # ---------- LLM client (key comes from the NVIDIA_API_KEY env var, never from code) ----------
 _client = None
