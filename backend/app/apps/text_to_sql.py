@@ -1,5 +1,6 @@
 """Text-to-SQL demo orchestrated with LangGraph:
 retrieve_schema -> generate_sql -> run_sql -(error? retry)-> explain, streamed to the UI as SSE."""
+import logging
 import os, re, json, math, random, sqlite3, time, threading
 from collections import Counter, defaultdict
 from datetime import date, timedelta
@@ -15,6 +16,7 @@ from langchain_core.output_parsers import StrOutputParser
 from langgraph.graph import StateGraph, START, END
 
 router = APIRouter()
+log = logging.getLogger("uvicorn.error")
 MODEL = "nvidia/nemotron-3-super-120b-a12b"
 EMBED_MODEL = "nvidia/nemotron-3-embed-1b"
 
@@ -105,6 +107,7 @@ def score(question, items):
                 _cache[k] = v
         return {k: cos(q, _cache[k]) for k, _ in items}, "embeddings"
     except Exception:
+        log.warning("Embeddings failed, using keyword fallback", exc_info=True)
         qc = Counter(toks(question))
         def lex(t):
             c = Counter(toks(t)); d = sum(qc[w] * c[w] for w in qc)
@@ -261,6 +264,7 @@ def ask(body: Ask, request: Request):
                 for node, data in upd.items():
                     yield f"data: {json.dumps({'node': node, **data}, default=str)}\n\n"
         except Exception as e:
+            log.exception("text_to_sql graph failed")
             msg = str(e) if isinstance(e, RuntimeError) else "The language model is unavailable right now. Please try again."
             yield f"data: {json.dumps({'node': 'error', 'message': msg})}\n\n"
 
