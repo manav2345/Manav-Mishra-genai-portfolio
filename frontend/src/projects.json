@@ -6,7 +6,7 @@
     "how": "Question → schema-aware agent → SQL → result → explanation",
     "tags": ["Text-to-SQL", "LangGraph", "SQLite"],
     "route": "/apps/text-to-sql",
-    "status": "coming-soon"
+    "status": "live"
   },
   {
     "id": "rag-chat",
